@@ -1,0 +1,57 @@
+.directory-files {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 75%;
+}
+
+.current-directory {
+  width: 90%;
+}
+
+.current-directory button {
+  width: 15%;
+  height: 33px;
+}
+
+.file, .directory {
+  margin: 15px;
+  text-align: center;
+  padding: 10px;
+}
+
+.item img {
+  height: 30px;
+  width: auto;
+}
+
+img.back-dir {
+  height: 40px;
+  position: relative;
+  top: 15px;
+  cursor: pointer;
+}
+
+.file .img {
+  width: 128px;
+  height: 128px;
+  background-image: url("../img/file.png")
+}
+
+.directory .img {
+  width: 128px;
+  height: 128px;
+  background-image: url("../img/folder.png")
+}
+
+input#current-directory {
+  width: 80%;
+  font-size: 20px;
+  padding: 3px;
+}
+
+.active-file, .active-directory {
+  background-color: #137EE7;
+  color: white;
+  border-radius: 5px;
+}
