@@ -15,8 +15,17 @@ div.tabs li:hover {
     cursor: pointer;
 }
 
+.directory-files table {
+  display: block;
+}
+
 ul.rename-list li {
   margin: 3px 0px 3px 0px;
+  list-style-type: none;
+}
+
+ul.rename-list li.rename-item.active {
+  color: red;
 }
 
 div.tabs>div {

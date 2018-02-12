@@ -50,7 +50,22 @@ function initFiles() {
     dataType: "json",
     success: function(data) {
       if(data.success) {
-        let directoryFiles = $('.directory-files')[0];
+        let dirsTable = $('.dirs-info>tbody')[0];
+        let filesTable = $('.files-info>tbody')[0];
+        for(index in data.items) {
+          let row = document.createElement('tr')
+          $(document.createElement('td')).html(data.items[index].name).appendTo(row)
+          $(document.createElement('td')).html(data.items[index].size).appendTo(row)
+          $(document.createElement('td')).html(data.items[index].birthtime).appendTo(row)
+          $(document.createElement('td')).html(data.items[index].atime).appendTo(row)
+          
+          if (data.items[index].isDirectory) {
+            $(row).appendTo(dirsTable);
+          } else if (data.items[index].isFile) {
+            $(row).appendTo(filesTable);
+          }
+        }
+        /*let directoryFiles = $('.directory-files')[0];
         let renameList = $('.rename-list')[0];
         directoryFiles.innerHTML = "";
         for(index in data.items) {
@@ -66,10 +81,14 @@ function initFiles() {
           if (data.items[index].isFile) {
             let renameListItem = document.createElement('li')
             renameListItem.innerHTML = data.items[index].name
-            $(renameListItem).appendTo(renameList)
+            $(renameListItem).addClass('rename-item').appendTo(renameList)
           }
           $()
         }
+
+        $('.rename-item').on('click', function() {
+          $(this).toggleClass('active');
+        })
 
         $('.file').on('click', function() {
           $(this).toggleClass("active-file");
@@ -91,7 +110,7 @@ function initFiles() {
           newDir.pop();
           newDir = newDir.join('/');
           changeDir(newDir);
-        })
+        })*/
       }
     },
     error(err) {

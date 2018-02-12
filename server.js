@@ -69,10 +69,14 @@ router.get('/dirinfo', function(req, res) {
 
     for (index in files) {
       let stats = fs.statSync(path.join(directory, files[index]));
+      console.log(stats)
       let file = {
         name: files[index],
         isDirectory: stats.isDirectory(),
-        isFile: stats.isFile()
+        isFile: stats.isFile(),
+        size: stats.size,
+        birthtime: stats.birthtime,
+        atime: stats.atime
       }
       items.push(file);
     }
