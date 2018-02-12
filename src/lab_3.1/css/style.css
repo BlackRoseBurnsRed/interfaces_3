@@ -1,8 +1,8 @@
-div.tabs ul {
+div.tabs ul.captions {
     padding: 0;
 }
 
-div.tabs li {
+div.tabs ul.captions li {
     list-style-type: none;
     display: inline-block;
     padding: 10px;
@@ -13,6 +13,10 @@ div.tabs li {
 
 div.tabs li:hover {
     cursor: pointer;
+}
+
+ul.rename-list li {
+  margin: 3px 0px 3px 0px;
 }
 
 div.tabs>div {

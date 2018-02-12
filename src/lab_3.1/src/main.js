@@ -51,6 +51,7 @@ function initFiles() {
     success: function(data) {
       if(data.success) {
         let directoryFiles = $('.directory-files')[0];
+        let renameList = $('.rename-list')[0];
         directoryFiles.innerHTML = "";
         for(index in data.items) {
           let item = $(document.createElement('div'))[0];
@@ -61,6 +62,13 @@ function initFiles() {
           caption.innerHTML = data.items[index].name;
           $(caption).addClass('fileName').appendTo(item);
           $(item).appendTo(directoryFiles)
+
+          if (data.items[index].isFile) {
+            let renameListItem = document.createElement('li')
+            renameListItem.innerHTML = data.items[index].name
+            $(renameListItem).appendTo(renameList)
+          }
+          $()
         }
 
         $('.file').on('click', function() {
