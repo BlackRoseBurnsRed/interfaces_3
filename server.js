@@ -25,6 +25,7 @@ router.use(function(req, res, next) {
     next();
 });
 
+//Getting labs html files
 app.get('/lab32', function(req, res) {
   res.sendFile(path.join(__dirname, 'src/lab_3.2/index.html'), function(err) {
     if (err) {

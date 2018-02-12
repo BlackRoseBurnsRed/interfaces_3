@@ -3,9 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>lab application 3.1</title>
-    <script src="./src/jquery.js" charset="utf-8"></script>
+    <script src="src/lab_3.1/src/jquery.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="src/lab_3.1/css/style.css">
   </head>
   <body>
+	<div class="tabs">
+	    <ul>
+	        <li>Изменить директорию</li>
+	        <li>Информация о файлах</li>
+	        <li>Переименование файлов</li>
+	    </ul>
+	    <div>
+	        <div class="directory">
+						<input type="text" id="current-directory">
+						<button class="update" type="button" name="button">Update</button>
+	        </div>
 
+	        <div class="directory-files">Информация о файлах</div>
+
+	        <div class="files-rename">Переименование файлов</div>
+	    </div>            
+	</div> 
+
+	<script src="src/lab_3.1/src/main.js" charset="utf-8"></script>
   </body>
 </html>
