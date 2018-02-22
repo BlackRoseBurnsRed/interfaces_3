@@ -11,6 +11,32 @@ div.tabs ul.captions li {
     border-radius: 3px;
 }
 
+.container{
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.button{
+    font-size: 26px;
+    border:none;
+    background-color: forestgreen;
+    color:#fff;
+}
+table{
+    margin: 0 auto;
+    width:560px;
+    border-spacing:4px 10px;
+    border-collapse: collapse;
+}
+.files-info{
+    width: 600px;
+}
+table tr, td{
+    padding: 10px;
+    border: 1px solid grey;
+}
+.files-info{
+    margin-top: 30px;
+}
 div.tabs li:hover {
     cursor: pointer;
 }
@@ -38,7 +64,6 @@ div.tabs>div {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 75%;
   }
   
   .current-directory {
@@ -54,6 +79,8 @@ div.tabs>div {
     margin: 15px;
     text-align: center;
     padding: 10px;
+    display: flex;
+    justify-content: center;
   }
   
   .item img {
