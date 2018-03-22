@@ -79,6 +79,14 @@ app.get('/help', function(req, res) {
   })
 })
 
+app.get('/info', function(req, res) {
+  res.sendFile(path.join(__dirname, 'src/help/info.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})
+
 app.get('/errors/1001.html', function(req, res) {
   res.sendFile(path.join(__dirname, 'src/help/errors/1001.html'), function(err) {
     if (err) {

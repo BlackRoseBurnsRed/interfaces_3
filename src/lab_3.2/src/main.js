@@ -91,9 +91,9 @@ function initFiles() {
           newDir = newDir.join('/');
           changeDir(newDir);
         })
-      }
-    } else {
+      } else {
       showErrorMessage(data.error);
+    }
     }
   })
 }
