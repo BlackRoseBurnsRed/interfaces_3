@@ -169,9 +169,7 @@ $('button.rename.button').on('click', () => {
       } else {
         showErrorMessage(data.error);
       }
-    } else {        
-        showErrorMessage(data.error);
-      }
+    }
   })
 })
 
