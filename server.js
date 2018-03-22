@@ -136,7 +136,7 @@ router.get('/dirinfo', function(req, res) {
     res.json({'items': items, success: true})
   } catch(err) {
     console.log(err);
-    res.json({success: false, error: err})
+    res.json({success: false, error: serverFunctions.getErrorByCode('1003')})
   }
 })
 
@@ -158,7 +158,7 @@ router.get('/renameFiles', function(req, res) {
     res.json({success: true})
   } catch(err) {
     console.log(err);
-    res.json({success: false, error: err})
+    res.json({success: false, error: serverFunctions.getErrorByCode('1005')})
   }
 })
 

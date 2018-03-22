@@ -119,3 +119,12 @@ div.tabs>div {
     border-radius: 5px;
   }
   
+  .file_for_rename {
+    padding: 3px;
+  }
+
+  .active-rename-file {
+    opacity: 0.8;
+    background-color: #BFBFBF;
+    border-radius: 5px;
+  }

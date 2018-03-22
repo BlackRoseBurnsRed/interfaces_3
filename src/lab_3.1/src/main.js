@@ -1,3 +1,13 @@
+
+function showErrorMessage(error, query) {
+  let errorMsg =
+    `Произошла ошибка
+    Код ошибки: ${error.code}
+    Сообщение: ${error.message}
+    ${query ? 'Запрос: ' + query : ''}`
+  alert(errorMsg);
+}
+
 (function($){				
 	jQuery.fn.lightTabs = function(options){
 
@@ -51,71 +61,45 @@ function initFiles() {
     success: function(data) {
       if(data.success) {
         let dirsTable = $('.dirs-info>tbody')[0];
+        dirsTable.innerHTML = "";
         let filesTable = $('.files-info>tbody')[0];
+        filesTable.innerHTML = "";
+        let rename_list = $('.rename-list')[0];
+        let list = $('.files-rename')[0];
+        rename_list.innerHTML = "";
         for(index in data.items) {
           let row = document.createElement('tr')
           $(document.createElement('td')).html(data.items[index].name).appendTo(row)
           $(document.createElement('td')).html(data.items[index].size).appendTo(row)
           $(document.createElement('td')).html(data.items[index].birthtime).appendTo(row)
           $(document.createElement('td')).html(data.items[index].atime).appendTo(row)
-          
+
+
           if (data.items[index].isDirectory) {
             $(row).appendTo(dirsTable);
           } else if (data.items[index].isFile) {
+            $(document.createElement('li'))
+              .html(data.items[index].name)
+              .addClass('file_for_rename')
+              .appendTo(rename_list)
             $(row).appendTo(filesTable);
           }
         }
-        /*let directoryFiles = $('.directory-files')[0];
-        let renameList = $('.rename-list')[0];
-        directoryFiles.innerHTML = "";
-        for(index in data.items) {
-          let item = $(document.createElement('div'))[0];
-          $(item).addClass("item");
-          $(item).addClass(data.items[index].isFile ? "file" : "directory");
-          $(document.createElement('div')).addClass('img').appendTo(item);
-          let caption = document.createElement('div');
-          caption.innerHTML = data.items[index].name;
-          $(caption).addClass('fileName').appendTo(item);
-          $(item).appendTo(directoryFiles)
-
-          if (data.items[index].isFile) {
-            let renameListItem = document.createElement('li')
-            renameListItem.innerHTML = data.items[index].name
-            $(renameListItem).addClass('rename-item').appendTo(renameList)
-          }
-          $()
-        }
-
-        $('.rename-item').on('click', function() {
-          $(this).toggleClass('active');
-        })
-
-        $('.file').on('click', function() {
-          $(this).toggleClass("active-file");
-          if ($('.active-file').length === 0) {
-            $('button.rename').removeClass("rename-one").removeClass("rename-some").hide();
-          } else if($('.active-file').length === 1) {
-            $('button.rename').addClass("rename-one").removeClass("rename-some").html('Rename file').show();
-          } else {
-            $('button.rename').addClass("rename-some").removeClass("rename-one").html('Rename files').show();
-          }
-        })
-
-        $('.directory').on('dblclick', function() {
-          openFolder($(this));
-        })
-
-        $('img.back-dir').on('click', function() {
-          let newDir = currentDir.split('/');
-          newDir.pop();
-          newDir = newDir.join('/');
-          changeDir(newDir);
-        })*/
+      } else {        
+        showErrorMessage(data.error);
       }
     },
     error(err) {
-
+      showErrorMessage(err);
     }
+  })
+  initRenameList();
+}
+
+initRenameList = () => {
+  console.log('Initialization rename list')
+  $(document).on('click', '.file_for_rename', function() {
+    $(this).toggleClass("active-rename-file");
   })
 }
 
@@ -128,6 +112,8 @@ initAllInfo = () => {
       if(data.success) {
         currentDir = (navigator.userAgent.indexOf ('Windows') != -1) ? data.curdir.replace(/\\/g, '/') : data.curdir;
         $('input#current-directory')[0].value = currentDir;
+      } else {        
+        showErrorMessage(data.error);
       }
     }
   })
@@ -145,12 +131,47 @@ $('button.update').on('click', () => {
       if(data.success) {
           currentDir = data.newDir;
           $('input#current-directory')[0].value = currentDir;
-          //initFiles();
-      } else {
-        alert("Wrong path\n" + $('input#current-directory')[0].value)
-        $('input#current-directory')[0].value = currentDir;
+          initAllInfo();
+      } else {        
+        showErrorMessage(data.error);
       }
     }
+  })
+})
+
+$('button.rename.button').on('click', () => {
+  let filesForRename = [];
+  $('.active-rename-file').each((index, item) => {
+    filesForRename.push(item.innerHTML)
+  })
+  console.log(filesForRename)
+  let newFilesNames = [];
+  for (let i = 0; i < filesForRename.length; i++) {
+    let wrongName = true;
+    while (wrongName) {
+      let newName = prompt('Input new name for file ' + filesForRename[i], filesForRename[i])
+      if(newName !== null && $.trim(newName) !== "") {
+        wrongName = false
+        newFilesNames.push(newName)
+      }
+    } 
+  }
+  console.log(newFilesNames)   
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/renameFiles',
+    data: {'filesForRename': filesForRename, 'newFilesNames': newFilesNames},
+    dataType: "json",
+    success: function(data) {
+      if(data.success) {
+        initAllInfo();
+      } else {
+        showErrorMessage(data.error);
+      }
+    } else {        
+        showErrorMessage(data.error);
+      }
   })
 })
 
