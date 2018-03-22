@@ -6,6 +6,35 @@ var path = require('path')
 
 var currentDir = __dirname;
 
+ERRORS = {
+  1001: {
+    code: 1001,
+    message: 'Запрашиваемая директория не найдена'
+  },
+  1002: {
+    code: 1002,
+    message: 'Некорректное имя файла'
+  },
+  1003: {
+    code: 1003,
+    message: 'Информация о директории недоступна'
+  },
+  1004: {
+    code: 1004,
+    message: 'Сервер недоступен'
+  },
+  1005: {
+    code: 1005,
+    message: 'Системная ошибка'
+  }
+}
+
+var serverFunctions = {
+  getErrorByCode(code) {
+    return ERRORS[code];
+  }
+}
+
 // configure app to use bodyParser()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -58,18 +87,11 @@ app.get('/errors/1001.html', function(req, res) {
   })
 })
 
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'src/notFound/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-})
-
 //API URLS
 
 // get current directory
 router.get('/curdir', function(req, res) {
+  console.log('Get')
   res.json({curdir: currentDir, success: true});
 })
 
@@ -78,8 +100,12 @@ router.get('/curdir', function(req, res) {
  * @param {string} path in require
  */
 router.get('/changedir', function(req, res) {
-  if (fs.existsSync(req.query.path))
+  if (!fs.existsSync(req.query.path)) {
+    res.json({newDir: currentDir, success: false, error: serverFunctions.getErrorByCode('1001')})
+    return
+  } else {    
     currentDir = req.query.path;
+  }
   res.json({newDir: currentDir, success: fs.existsSync(req.query.path)})
 })
 
@@ -135,6 +161,16 @@ router.get('/renameFiles', function(req, res) {
     res.json({success: false, error: err})
   }
 })
+
+
+
+/*app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'src/notFound/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})*/
 
 // REGISTER ROUTES
 // all of our api routes will be prefixed with /api

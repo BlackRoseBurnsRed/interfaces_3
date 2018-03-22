@@ -1,14 +1,25 @@
 var currentDir = "";
 
+function showErrorMessage(error, query) {
+  let errorMsg =
+    `Произошла ошибка
+    Код ошибки: ${error.code}
+    Сообщение: ${error.message}
+    ${query ? 'Запрос: ' + query : ''}`
+  alert(errorMsg);
+}
+
 function initCurrentDirectory() {
   $.ajax({
     type: 'GET',
-    url: '/api/curdir',
+    url: 'api/curdir',
     dataType: "json",
     success: function(data) {
       if(data.success) {
         currentDir = (navigator.userAgent.indexOf ('Windows') != -1) ? data.curdir.replace(/\\/g, '/') : data.curdir;
         $('input#current-directory')[0].value = currentDir;
+      } else {
+        showErrorMessage(data.error);
       }
     }
   })
@@ -26,7 +37,7 @@ function changeDir(newDir) {
           $('input#current-directory')[0].value = currentDir;
           initFiles();
       } else {
-        alert("Wrong path\n" + $('input#current-directory')[0].value)
+        showErrorMessage(data.error, $('input#current-directory')[0].value)
         $('input#current-directory')[0].value = currentDir;
       }
     }
@@ -52,9 +63,6 @@ function initFiles() {
           let item = $(document.createElement('div'))[0];
           $(item).addClass("item");
           $(item).addClass(data.items[index].isFile ? "file" : "directory");
-          /*if (data.items[index].isFile) {
-            $(document.createElement('img')).attr({src: "../img/pen.png"}).appendTo(item);
-          }*/
           $(document.createElement('div')).addClass('img').appendTo(item);
           let caption = document.createElement('div');
           caption.innerHTML = data.items[index].name;
@@ -73,10 +81,6 @@ function initFiles() {
           }
         })
 
-        /*$('.directory').on('click', function() {
-          $(this).toggleClass("active-directory");
-        })*/
-
         $('.directory').on('dblclick', function() {
           openFolder($(this));
         })
@@ -88,14 +92,14 @@ function initFiles() {
           changeDir(newDir);
         })
       }
-    },
-    error(err) {
-
+    } else {
+      showErrorMessage(data.error);
     }
   })
 }
 
 $(document).ready(function() {
+  debugger
   initCurrentDirectory();
   initFiles();
   $('button.rename').hide();
@@ -129,27 +133,12 @@ $('button.rename').on('click', () => {
       if(data.success) {
         initFiles()
       } else {
-        alert('Shit happens (c)')
+        showErrorMessage(data.error);
       }
     }
   })
 })
 
 $('button.update').on('click', () => {
-  $.ajax({
-    type: 'GET',
-    url: '/api/changedir',
-    data: {path: $('input#current-directory')[0].value},
-    dataType: "json",
-    success: function(data) {
-      if(data.success) {
-          currentDir = data.newDir;
-          $('input#current-directory')[0].value = currentDir;
-          initFiles();
-      } else {
-        alert("Wrong path\n" + $('input#current-directory')[0].value)
-        $('input#current-directory')[0].value = currentDir;
-      }
-    }
-  })
+  changeDir( $('input#current-directory')[0].value);
 })
